@@ -3,11 +3,11 @@
   <div class="card">
     <h1 class="heading-u-red">Add Address</h1>
 
-      <form action="/api/address" method="POST">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <input type="hidden" name="returnTo" id="redirect-input" value="{{returnTo}}" />
+    <form action="/api/address" method="POST">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <input type="hidden" name="returnTo" id="redirect-input" value="{{returnTo}}" />
 
-        {{> error-snippet}}
+      {{> error-snippet}}
 
       <div class="my-5 row align-items-center">
         <div class="col-md-2 col-4">
@@ -61,7 +61,8 @@
               <label for="addtype" class="font-sm">Email</label>
             </div>
             <div class="col-8">
-              <input type="text" name="email" class="underline-input pb-4 font-sm bold w-100" placeholder="E-Mail" value="{{userDetails.email}}">
+              <input type="text" name="email" class="underline-input pb-4 font-sm bold w-100" placeholder="E-Mail"
+                value="{{userDetails.email}}">
             </div>
           </div>
         </div>
@@ -155,34 +156,43 @@
               </div>
             </div>
 
-              <div class="row no-gutters align-items-center justify-content-between detail-row">
-                      <div class="label-input col-md-4 col-sm-3">Whatsapp No.</div>
-                      <input class="input-text col-md-8 col-sm-8"  type="text" placeholder="Whatsapp Number" name="whatsapp_number" />
+            <div class="row no-gutters align-items-center justify-content-between detail-row">
+              <div class="label-input col-md-4 col-sm-3">Whatsapp No.</div>
+              <input class="input-text col-md-8 col-sm-8" type="text" placeholder="Whatsapp Number"
+                name="whatsapp_number" />
 
-              </div>
-              <div class="row no-gutters align-items-center detail-row">
-                <label><input type="checkbox" class="input-checkbox" id="cb-whatsapp-toggle" >Same as Mobile No.</label>
-              </div>
-           </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="mt-4 row align-items-center">
-            <div class="col-4">
-              <label for="addtype" class="font-sm">Whatsapp No.</label>
             </div>
-            <div class="col-8">
-              <input type="text" name="whatsapp_number" class="underline-input pb-4 font-sm bold w-100"
-                placeholder="Whatsapp No.">
+            <div class="row no-gutters align-items-center detail-row">
+              <label><input type="checkbox" class="input-checkbox" id="cb-whatsapp-toggle">Same as Mobile No.</label>
             </div>
           </div>
-
         </div>
       </div>
-      <div class="mt-5">
-        <button class="button-solid button-orange lg" type="submit">Save Changes</button>
-        <button class="font-sm ml-4 orange" type="reset">Reset</button>
+      <div class="col-lg-6">
+        <div class="mt-4 row align-items-center">
+          <div class="col-4">
+            <label for="addtype" class="font-sm">Whatsapp No.</label>
+          </div>
+          <div class="col-8">
+            <input type="text" name="whatsapp_number" class="underline-input pb-4 font-sm bold w-100"
+              placeholder="Whatsapp No.">
+          </div>
+        </div>
+
       </div>
-    </form>
+  </div>
+  <div class="mt-5">
+    <button class="button-solid button-orange lg" type="submit">Save Changes</button>
+    <button class="font-sm ml-4 orange" type="reset">Reset</button>
+  </div>
+  </form>
+</div>
+</div>
+
+
+<div class="row no-gutters work-area">
+  {{> side-nav}}
+  <div class="col-md-9 py-5 work-area__main-area">
+
   </div>
 </div>
