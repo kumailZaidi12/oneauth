@@ -2,7 +2,7 @@ $(function () {
 //---------------------------------------------------------Modal--------------------------------------------------------
     const triggerButton = $("#change-dp-trigger")
     triggerButton.on("click", () => {
-        const modal = $("#profile-pic-modal")
+        const modal = $("#change-dp")
         const overlay = modal.find(".overlay")
 
         overlay.on("click", () => {
