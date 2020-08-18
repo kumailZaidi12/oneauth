@@ -39,8 +39,8 @@ $(function () {
     })
     avatarPics.click(function () {
         picInput.val("")
-        $(avatarPics).removeClass("click-pic")
-        $(this).addClass("click-pic")
+        $(avatarPics).removeClass("border")
+        $(this).addClass("border")
         let idx = avatarPics.index(this)
         ++idx
         hiddenInput.val(idx)

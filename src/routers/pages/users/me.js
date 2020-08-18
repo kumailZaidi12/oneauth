@@ -189,7 +189,7 @@ router.post('/edit',
       req.flash('error', 'Contact number is not a valid number')
       return res.redirect('/users/me/edit')
     }
-      if (req.body.whatsapp_number.trim() != '') {
+      if (req.body.whatsapp_number && req.body.whatsapp_number.trim() != '') {
           try {
               if (!(validateNumber(parseNumberEntireString(
                   req.body.dial_code_wa + '-' + req.body.whatsapp_number
