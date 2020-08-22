@@ -1,4 +1,21 @@
 $(function () {
+//---------------------------------------------------------Modal--------------------------------------------------------
+    const triggerButton = $("#change-dp-trigger")
+    triggerButton.on("click", () => {
+        const modal = $("#change-dp")
+        const overlay = modal.find(".overlay")
+
+        overlay.on("click", () => {
+            modal.addClass("d-none")
+        })
+
+        if (modal.hasClass("d-none")) {
+            return modal.removeClass("d-none")
+        }
+
+        return modal.addClass("d-none")
+    })
+//---------------------------------------------------------Modal--------------------------------------------------------
 //------------------------------------------------Profile Picture Update------------------------------------------------
     var picInput = $("#userpic")
     var avatarPics = $("img.avatar")
@@ -22,8 +39,8 @@ $(function () {
     })
     avatarPics.click(function () {
         picInput.val("")
-        $(avatarPics).removeClass("click-pic")
-        $(this).addClass("click-pic")
+        $(avatarPics).removeClass("border")
+        $(this).addClass("border")
         let idx = avatarPics.index(this)
         ++idx
         hiddenInput.val(idx)
