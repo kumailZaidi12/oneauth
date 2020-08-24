@@ -54,17 +54,17 @@ module.exports = new FacebookStrategy({
 
                 if(user){
                     user.update({photo: "https://graph.facebook.com/" + profileJson.id + "/picture?type=large"})
-                    setImmediate(() => {
-                        span.addTags({
-                            resource: req.path,
-                            type: 'web',
-                            'span.kind': 'server',
-                            userId: oldUser.id,
-                            newUser: false,
-                            facebookId: profileJson.id
-                        })
-                        span.finish()
-                    })
+                    // setImmediate(() => {
+                    //     span.addTags({
+                    //         resource: req.path,
+                    //         type: 'web',
+                    //         'span.kind': 'server',
+                    //         userId: oldUser.id,
+                    //         newUser: false,
+                    //         facebookId: profileJson.id
+                    //     })
+                    //     span.finish()
+                    // })
                     return cb(null, user.get())
                 }else{
                     return cb(err, null,{message: "Could not retrieve existing Twitter linked account"})
