@@ -18,8 +18,11 @@ router.get(
   passport.authorize('discord', {
     failureRedirect: '/login',
   }),
-  function(req, res) {
-    res.redirect('/users/me');
+  function (req, res) {
+    const redirect = req.session.returnTo || '/users/me';
+    req.session.returnTo = undefined;
+
+    res.redirect(redirect);
   },
 );
 

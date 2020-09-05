@@ -55,6 +55,14 @@ const redirectToHome = function (req, res, next) {
 
 }
 
+const setReturnTo = function (req, res, next) {
+  if(req.query.returnTo) {
+    req.session.returnTo = req.query.returnTo;
+  }
+
+  next();
+}
+
 // ====================== START SENTRY
 Raven.config(secrets.SENTRY_DSN).install()
 app.use(Raven.requestHandler())
@@ -123,7 +131,7 @@ app.use('/login', loginrouter)
 app.use('/destroysessions', destroysessionsrouter)
 app.use(redirectToEditProfile);
 app.use('/disconnect', disconnectrouter)
-app.use('/connect', connectrouter)
+app.use('/connect', setReturnTo, connectrouter)
 app.use('/', pagerouter)
 app.get('*', (req, res) => res.render('404'));
 
