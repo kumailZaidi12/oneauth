@@ -58,3 +58,5 @@ newrelic_agent.log
 public_static/css/motley.css
 
 .vscode/*
+
+tmp/

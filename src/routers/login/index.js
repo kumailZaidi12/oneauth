@@ -5,7 +5,7 @@ const router = require('express').Router()
 const makeGaEvent = require('../../utils/ga').makeGaEvent
 const { authLimiter } = require('../../middlewares/ratelimit')
 
-router.use(authLimiter)
+// router.use(authLimiter)
 router.use('/',
     // Commenting it out as we do this event inside the strategy
     // to differentiate local vs lms
