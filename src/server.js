@@ -79,6 +79,13 @@ app.set("view engine", "hbs")
 app.set('view cache', true)
 // ====================== Handlebars Config
 
+// ====================== ReCAPTCHA
+app.locals.RECAPTCHA = {
+    KEY: config.SECRETS.RECAPTCHA.KEY,
+    SECRET: config.SECRETS.RECAPTCHA.SECRET,
+}
+// ====================== ReCAPTCHA
+
 
 app.use('/status', statusrouter)
 app.use(expressLogger)
