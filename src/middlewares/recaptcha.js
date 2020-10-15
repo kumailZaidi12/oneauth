@@ -13,8 +13,6 @@ module.exports = async (req, res, next) => {
       }
     })
 
-    console.log(resp.data)
-
     if (!resp.data.success) {
       return res.sendStatus(403);
     }
