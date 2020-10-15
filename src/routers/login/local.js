@@ -3,8 +3,9 @@
  */
 const router = require('express').Router();
 const passport = require('../../passport/passporthandler');
+const recaptcha = require('../../middlewares/recaptcha');
 
-router.post('/', passport.authenticate([
+router.post('/', recaptcha, passport.authenticate([
     'local',
     // 'lms' // we have deprecated LMS logins now
 ], {

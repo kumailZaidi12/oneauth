@@ -13,7 +13,7 @@
       <div class="font-mds dark-grey mt-1">Step into the world of coding</div>
     </div>
 
-    <form action="/login" method="post">
+    <form id="login-form" action="/login" method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
       {{> error-snippet}}
@@ -37,7 +37,14 @@
       </label>
 
       <div class="mt-5">
-        <button class="button-solid button-orange lg" type="submit">Login Now</button>
+        <button 
+          class="g-recaptcha button-solid button-orange lg" 
+          type="submit"
+          data-sitekey="{{RECAPTCHA.KEY}}" 
+          data-callback="onLoginSubmitted"
+        >
+          Login Now
+        </button>
         <button class="font-sm gradient-text-orange semi-bold ml-3" type="submit" formaction="/login/otp"
           formmethod="post">
           Login with OTP
@@ -57,3 +64,16 @@
     </div>
   </div>
 </div>
+
+<script>
+  function onLoginSubmitted(token) {
+    document.getElementById("login-form").submit();
+  }
+</script>
+
+<style>
+  .grecaptcha-badge { 
+    right: 0px !important;
+    bottom:65px !important; 
+  }
+</style>
