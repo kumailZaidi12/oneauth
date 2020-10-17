@@ -63,4 +63,6 @@ switch (config.DEPLOY_CONFIG) {
     break;
 }
 
+config.RECAPTCHA_ENABLED = process.env.RECAPTCHA_ENABLED || config.DEPLOY_CONFIG === 'production'
+
 module.exports = config;

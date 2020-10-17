@@ -81,6 +81,7 @@ app.set('view cache', true)
 
 // ====================== ReCAPTCHA
 app.locals.RECAPTCHA = {
+    ENABLED: config.RECAPTCHA_ENABLED,
     KEY: config.SECRETS.RECAPTCHA.KEY,
     SECRET: config.SECRETS.RECAPTCHA.SECRET,
 }
