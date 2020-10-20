@@ -8,6 +8,9 @@ body {
     body{font-size: 1rem;}
 }
 
+.grecaptcha-badge { 
+  display: none;
+}
 
 .thin-font {
     font-weight: 100;

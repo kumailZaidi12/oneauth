@@ -19,8 +19,9 @@ const {
 } = require('../controllers/verify_emails')
 const {parseNumberEntireString, validateNumber} = require('../utils/mobile_validator')
 const {generateReferralCode} = require('../utils/referral')
+const recaptcha = require('../middlewares/recaptcha');
 
-router.post('/', makeGaEvent('attempt', 'signup', 'local'),
+router.post('/', recaptcha, makeGaEvent('attempt', 'signup', 'local'),
     async (req, res) => {
 
     // store the posted data in the session

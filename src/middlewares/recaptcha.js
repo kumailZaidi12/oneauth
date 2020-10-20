@@ -2,7 +2,7 @@ const config = require('../../config');
 const axios = require('axios');
 
 module.exports = async (req, res, next) => {
-  if (req.method === 'POST') {
+  if (req.method === 'POST' && config.RECAPTCHA_ENABLED) {
     const captchaResponse = req.body['g-recaptcha-response'];
     const resp = await axios({
       method: 'POST',

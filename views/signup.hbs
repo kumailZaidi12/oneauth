@@ -13,7 +13,7 @@
 			<div class="font-mds dark-grey mt-1">Get access to all applications now</div>
 		</div>
 
-		<form action="/signup" method="post">
+		<form action="/signup" method="post" id="signup-form">
 			<input type="hidden" name="_csrf" value="{{csrfToken}}">
 			<input type="hidden" name="refcode" value="{{refCode}}">
 			{{> error-snippet}}
@@ -143,8 +143,21 @@
 			</div>
 
 			<div class="mt-5">
-				<button class="button-solid button-orange lg" type="submit">Sign Up Now</button>
+				<button 
+					class="g-recaptcha button-solid button-orange lg" 
+					type="submit"
+					data-sitekey="{{RECAPTCHA.KEY}}" 
+          data-callback="onSignUpSubmitted"
+				>
+					Sign Up Now
+				</button>
 			</div>
 		</form>
 	</div>
 </div>
+
+<script>
+  function onSignUpSubmitted(token) {
+    document.getElementById("signup-form").submit();
+  }
+</script>
