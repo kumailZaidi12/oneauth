@@ -1,7 +1,9 @@
 const { User, UserLocal, Demographic, College, Branch, Address, WhitelistDomains} = require("../db/models").models;
 const { db }= require('../db/models')
 const sequelize = require('sequelize');
+const Bluebird = require('bluebird');
 const Raven = require('raven');
+const passutils = require("../utils/password");
 
 const { validateUsername } = require('../utils/username_validator')
 const { eventUserCreated, eventUserUpdated } = require('./event/users')
@@ -202,6 +204,37 @@ async function clearSessionForUser (userId) {
     return db.query(`DELETE FROM SESSIONS WHERE "userId" = ${+userId}`)
 }
 
+const createVerifiedUserWithPassword = async (user) => {
+
+    try {
+        user.verifiedemail = user.email
+        user.userlocal = {
+            password: await passutils.pass2hash(user.password)
+        }
+        let record = await User.create(user, {
+            include: [{
+                association: User.UserLocal,
+            }]
+        });
+        record = record.get({plain:true})
+        record.created = true
+        record.error = null
+        delete record.userlocal
+        return  record
+    } catch (e) {
+        console.log(e)
+        delete user.userlocal
+        user.created = false
+        user.error = e.message
+        return user
+    }
+}
+
+const insertBulkUsers = async (users) => {
+    return await Bluebird.map(users, (user) => {
+        return createVerifiedUserWithPassword(user)
+    })
+}
 
 module.exports = {
     findAllUsers,
@@ -213,5 +246,6 @@ module.exports = {
     findUserForTrustedClient,
     findAllUsersWithFilter,
     createUserWithoutPassword,
-    clearSessionForUser
+    clearSessionForUser,
+    insertBulkUsers
 };

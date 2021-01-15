@@ -18,6 +18,7 @@ const passutils = require('../../utils/password')
 const mail = require('../../utils/email')
 const {generateReferralCode} = require('../../utils/referral')
 const uid = require('uid2')
+const {insertBulkUsers} = require("../../controllers/user");
 const {validateBulkUserInsert} = require("../../validators/users");
 const {upsertDemographic, upsertAddress} = require("../../controllers/demographics")
 const {createAddress} = require("../../controllers/demographics")
@@ -410,9 +411,11 @@ router.post('/bulk',
 
     try {
         const validatedBody = await validateBulkUserInsert(req.body)
-        res.json(validatedBody)
-    } catch (e){
-        res.json(e)
+        const records = await insertBulkUsers(validatedBody)
+        res.json(records)
+    } catch (err){
+        Raven.captureException(err)
+        return res.status(400).json({err:err})
     }
 
 })

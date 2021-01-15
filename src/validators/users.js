@@ -5,15 +5,15 @@ const {validateUsername} = require("../utils/username_validator");
 const userSchema = Joi.object().keys({
     firstname: Joi.string().min(3).required(),
     lastname: Joi.string().min(3).required(),
-    email: Joi.string().email().required(),
-    mobile: Joi.string().custom((value, helpers) => {
+    email: Joi.string().email().required().lowercase(),
+    mobile_number: Joi.string().custom((value, helpers) => {
         if (!(validateNumber(parseNumberEntireString(value)))) {
             return helpers.message('INVALID_MOBILE_NUMBER')
         } else {
             return value
         }
     }),
-    username: Joi.string().custom((value, helpers) => {
+    username: Joi.string().lowercase().custom((value, helpers) => {
         const error = validateUsername(value)
         if (error) {
             return helpers.message(error)
