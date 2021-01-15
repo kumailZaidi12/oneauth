@@ -222,7 +222,6 @@ const createVerifiedUserWithPassword = async (user) => {
         delete record.userlocal
         return  record
     } catch (e) {
-        console.log(e)
         delete user.userlocal
         user.created = false
         user.error = e.message
