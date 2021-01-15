@@ -238,6 +238,13 @@ const insertBulkUsers = async (users) => {
 
 const checkRecordsForDuplicacy = async (users) => {
     return await Bluebird.map(users, async (user) => {
+        const isEmailDomainWhitelisted = await WhitelistDomains.findOne({
+            where: {
+                domain: {
+                    $iLike: user.email.split('@')[1]
+                }
+            }
+        })
         const userRecordUsername = await User.findOne({
             where: {
                 username: user.username
@@ -253,17 +260,22 @@ const checkRecordsForDuplicacy = async (users) => {
                 ...user,
                 error: 'Username and email already exists',
             }
-        } else if(userRecordEmail){
+        } else if (userRecordEmail){
             return {
                 ...user,
-                error: 'Email'
+                error: 'Email already exists'
             }
         } else if (userRecordUsername){
             return {
                 ...user,
                 error: 'Username already exists'
             }
-        } else{
+        } else if (!isEmailDomainWhitelisted){
+            return {
+                ...user,
+                error: 'Email belongs to a domain that codingblocks oneauth currently do not support'
+            }
+        } else {
             return {
                 ...user,
                 error: null
