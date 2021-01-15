@@ -18,6 +18,7 @@ const passutils = require('../../utils/password')
 const mail = require('../../utils/email')
 const {generateReferralCode} = require('../../utils/referral')
 const uid = require('uid2')
+const {validateBulkUserInsert} = require("../../validators/users");
 const {upsertDemographic, upsertAddress} = require("../../controllers/demographics")
 const {createAddress} = require("../../controllers/demographics")
 const {hasNull} = require('../../utils/nullCheck')
@@ -339,7 +340,7 @@ router.post('/',
             user = await findUserByParams({
                 verifiedmobile: {
                     $eq: req.body.dial_code + '-' + req.body.mobile_number
-                } 
+                }
             })
 
             if (user) {
@@ -402,6 +403,19 @@ router.post('/',
 
     })
 
+router.post('/bulk',
+    makeGaEvent('create', 'user', 'api'),
+    passport.authenticate(['basic', 'oauth2-client-password'], {session: false}),
+    async (req, res, next) => {
+
+    try {
+        const validatedBody = await validateBulkUserInsert(req.body)
+        res.json(validatedBody)
+    } catch (e){
+        res.json(e)
+    }
+
+})
 
 router.post('/add',
     makeGaEvent('create', 'user', 'api'),
