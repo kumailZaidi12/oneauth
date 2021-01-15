@@ -77,13 +77,6 @@ async function createUserWithoutPassword(userParams) {
     })
 }
 
-async function createUser(user) {
-    const userObj = await User.create(user)
-    eventUserCreated(userObj.id).catch(Raven.captureException.bind(Raven))
-    return userObj
-}
-
-
 /**
  * update an user
  * @param userid id of user to modify
@@ -215,7 +208,8 @@ const createVerifiedUserWithPassword = async (user) => {
             include: [{
                 association: User.UserLocal,
             }]
-        });
+        })
+        eventUserCreated(record.id).catch(Raven.captureException.bind(Raven))
         record = record.get({plain:true})
         record.created = true
         record.error = null
