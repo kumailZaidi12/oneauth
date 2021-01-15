@@ -18,7 +18,7 @@ const passutils = require('../../utils/password')
 const mail = require('../../utils/email')
 const {generateReferralCode} = require('../../utils/referral')
 const uid = require('uid2')
-const {insertBulkUsers} = require("../../controllers/user");
+const {insertBulkUsers, checkRecordsForDuplicacy} = require("../../controllers/user");
 const {validateBulkUserInsert} = require("../../validators/users");
 const {upsertDemographic, upsertAddress} = require("../../controllers/demographics")
 const {createAddress} = require("../../controllers/demographics")
@@ -411,6 +411,11 @@ router.post('/bulk',
 
     try {
         const validatedBody = await validateBulkUserInsert(req.body)
+        const queriedRecords = await checkRecordsForDuplicacy(validatedBody)
+        const duplicatesExists = queriedRecords.some((record) => record && record.error)
+        if (duplicatesExists){
+            return res.status(400).json(queriedRecords)
+        }
         const records = await insertBulkUsers(validatedBody)
         res.json(records)
     } catch (err){

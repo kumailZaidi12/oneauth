@@ -233,7 +233,43 @@ const createVerifiedUserWithPassword = async (user) => {
 const insertBulkUsers = async (users) => {
     return await Bluebird.map(users, (user) => {
         return createVerifiedUserWithPassword(user)
-    })
+    }, {concurrency: 50})
+}
+
+const checkRecordsForDuplicacy = async (users) => {
+    return await Bluebird.map(users, async (user) => {
+        const userRecordUsername = await User.findOne({
+            where: {
+                username: user.username
+            }
+        })
+        const userRecordEmail = await User.findOne({
+            where: {
+              verifiedemail: user.email
+            }
+        })
+        if (userRecordUsername && userRecordEmail){
+            return {
+                ...user,
+                error: 'Username and email already exists',
+            }
+        } else if(userRecordEmail){
+            return {
+                ...user,
+                error: 'Email'
+            }
+        } else if (userRecordUsername){
+            return {
+                ...user,
+                error: 'Username already exists'
+            }
+        } else{
+            return {
+                ...user,
+                error: null
+            }
+        }
+    }, {concurrency: 50})
 }
 
 module.exports = {
@@ -247,5 +283,6 @@ module.exports = {
     findAllUsersWithFilter,
     createUserWithoutPassword,
     clearSessionForUser,
-    insertBulkUsers
+    insertBulkUsers,
+    checkRecordsForDuplicacy
 };
