@@ -116,7 +116,7 @@ module.exports = new FacebookStrategy({
                     Use 'Forgot Password' option if you do not remember password of old account`
                     })
                 }
-
+               
                 userFacebook = await models.UserFacebook.create({
                     id: profileJson.id,
                     accessToken: authToken,
@@ -124,7 +124,7 @@ module.exports = new FacebookStrategy({
                     photo: "https://graph.facebook.com/" + profileJson.id + "/picture?type=large",
                     user: {
                         username: profileJson.first_name + '-' + profileJson.last_name + '-' + profileJson.id,
-                        firstname: profileJson.first_name,
+                        firstname: profileJson.first_name+' '+profileJson.middle_name,
                         lastname: profileJson.last_name,
                         email: profileJson.email,
                         referralCode: generateReferralCode(profileJson.email).toUpperCase(),

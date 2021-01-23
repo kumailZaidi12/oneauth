@@ -34,6 +34,8 @@ router.get('/signup', cel.ensureNotLoggedIn('/'), async function (req, res, next
             findAllCountries()
         ]);
         const prevForm = Object.assign({}, req.session.prevForm)
+        // console.log("helloooooooo"+prevForm)
+        // console.log(req.query.refCode)
 
         const verifiedRefCode = await findUserByParams({referralCode: req.query.refcode })
 

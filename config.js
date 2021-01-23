@@ -29,7 +29,7 @@ switch (config.DEPLOY_CONFIG) {
   case 'localhost':
     config.SERVER_URL = 'http://localhost:3838'
     config.DEBUG = true
-    config.SECRETS = require('./secrets-sample.json')
+    config.SECRETS = require('./secrets.json')
     break;
 
 
@@ -37,7 +37,7 @@ switch (config.DEPLOY_CONFIG) {
   case 'heroku':
     config.SERVER_URL = 'https://oneauth.herokuapp.com'
     config.DEBUG = true
-    config.SECRETS = require('./secrets-sample.json')
+    config.SECRETS = require('./secrets.json')
     if (process.env.SENTRY_DSN) {
       config.SECRETS.SENTRY_DSN = process.env.SENTRY_DSN
     }
