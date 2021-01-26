@@ -105,7 +105,7 @@ const UserLms = db.define('userlms', definitions.social.lms)
 const UserDiscord = db.define('userdiscord', definitions.social.discord)
 
 UserLocal.belongsTo(User)
-User.hasOne(UserLocal, {foreignKey: {unique: true}})
+User.UserLocal = User.hasOne(UserLocal, {foreignKey: {unique: true}})
 
 UserFacebook.belongsTo(User)
 User.hasOne(UserFacebook, {foreignKey: {unique: true}})

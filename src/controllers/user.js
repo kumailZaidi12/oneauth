@@ -1,7 +1,9 @@
 const { User, UserLocal, Demographic, College, Branch, Address, WhitelistDomains} = require("../db/models").models;
 const { db }= require('../db/models')
 const sequelize = require('sequelize');
+const Bluebird = require('bluebird');
 const Raven = require('raven');
+const passutils = require("../utils/password");
 
 const { validateUsername } = require('../utils/username_validator')
 const { eventUserCreated, eventUserUpdated } = require('./event/users')
@@ -74,13 +76,6 @@ async function createUserWithoutPassword(userParams) {
         }]
     })
 }
-
-async function createUser(user) {
-    const userObj = await User.create(user)
-    eventUserCreated(userObj.id).catch(Raven.captureException.bind(Raven))
-    return userObj
-}
-
 
 /**
  * update an user
@@ -202,6 +197,85 @@ async function clearSessionForUser (userId) {
     return db.query(`DELETE FROM SESSIONS WHERE "userId" = ${+userId}`)
 }
 
+const createVerifiedUserWithPassword = async (user) => {
+
+    try {
+        user.verifiedemail = user.email
+        user.userlocal = {
+            password: await passutils.pass2hash(user.password)
+        }
+        let record = await User.create(user, {
+            include: [{
+                association: User.UserLocal,
+            }]
+        })
+        eventUserCreated(record.id).catch(Raven.captureException.bind(Raven))
+        record = record.get({plain:true})
+        record.created = true
+        record.error = null
+        delete record.userlocal
+        return  record
+    } catch (e) {
+        delete user.userlocal
+        user.created = false
+        user.error = e.message
+        return user
+    }
+}
+
+const insertBulkUsers = async (users) => {
+    return await Bluebird.map(users, (user) => {
+        return createVerifiedUserWithPassword(user)
+    }, {concurrency: 50})
+}
+
+const checkRecordsForDuplicacy = async (users) => {
+    return await Bluebird.map(users, async (user) => {
+        const isEmailDomainWhitelisted = await WhitelistDomains.findOne({
+            where: {
+                domain: {
+                    $iLike: user.email.split('@')[1]
+                }
+            }
+        })
+        const userRecordUsername = await User.findOne({
+            where: {
+                username: user.username
+            }
+        })
+        const userRecordEmail = await User.findOne({
+            where: {
+              verifiedemail: user.email
+            }
+        })
+        if (userRecordUsername && userRecordEmail){
+            return {
+                ...user,
+                error: 'Username and email already exists',
+            }
+        } else if (userRecordEmail){
+            return {
+                ...user,
+                error: 'Email already exists'
+            }
+        } else if (userRecordUsername){
+            return {
+                ...user,
+                error: 'Username already exists'
+            }
+        } else if (!isEmailDomainWhitelisted){
+            return {
+                ...user,
+                error: 'Email belongs to a domain that codingblocks oneauth currently do not support'
+            }
+        } else {
+            return {
+                ...user,
+                error: null
+            }
+        }
+    }, {concurrency: 50})
+}
 
 module.exports = {
     findAllUsers,
@@ -213,5 +287,7 @@ module.exports = {
     findUserForTrustedClient,
     findAllUsersWithFilter,
     createUserWithoutPassword,
-    clearSessionForUser
+    clearSessionForUser,
+    insertBulkUsers,
+    checkRecordsForDuplicacy
 };
