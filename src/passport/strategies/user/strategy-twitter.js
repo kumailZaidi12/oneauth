@@ -107,7 +107,6 @@ module.exports = new TwitterStrategy({
                  * we use a `username-t` policy
                  */
                 const existCount = await models.User.count({where: {username: profileJson.screen_name}})
-              
                 const name = profileJson.name.split(' ')
                 userTwitter = await models.UserTwitter.create({
                     id: profileJson.id,

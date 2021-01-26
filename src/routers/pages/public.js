@@ -34,9 +34,6 @@ router.get('/signup', cel.ensureNotLoggedIn('/'), async function (req, res, next
             findAllCountries()
         ]);
         const prevForm = Object.assign({}, req.session.prevForm)
-        // console.log("helloooooooo"+prevForm)
-        // console.log(req.query.refCode)
-
         const verifiedRefCode = await findUserByParams({referralCode: req.query.refcode })
 
         const gradYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014,

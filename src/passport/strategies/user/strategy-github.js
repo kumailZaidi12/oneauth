@@ -111,7 +111,6 @@ module.exports = new GithubStrategy({
                     user: {
                         username: existCount === 0 ? profileJson.login : profileJson.login + "-gh",
                         firstname: profileJson.name ? profileJson.name.split(' ')[0] : profileJson.login,
-                        // lastname: profileJson.name ? profileJson.name.split(' ').pop() : profileJson.login,
                         email: profileJson.email,
                         referralCode: generateReferralCode(profileJson.email).toUpperCase(),
                         photo: profileJson.avatar_url,
