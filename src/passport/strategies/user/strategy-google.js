@@ -98,7 +98,7 @@ module.exports = new GoogleStrategy({
 
                     /* Check if users with same username exist. Modify username accordingly */
                     const existCount = await models.User.count({where: {username: profileJson.username}})
-
+               
                     userGoogle = await models.UserGoogle.create({
                         id: profileJson.sub,
                         accessToken: accessToken,
@@ -106,8 +106,8 @@ module.exports = new GoogleStrategy({
                         username: profileJson.username,
                         user: {
                             username: existCount === 0 ? profileJson.username : profileJson.username + '-g',
-                            firstname: profileJson.name.givenName,
-                            lastname: profileJson.name.familyName,
+                            firstname: profileJson.given_name,
+                            lastname: profileJson.family_name,
                             photo: profileJson.picture,
                             email: profileJson.email,
                             referralCode: generateReferralCode(profileJson.email).toUpperCase(),

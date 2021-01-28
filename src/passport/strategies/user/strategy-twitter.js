@@ -107,6 +107,7 @@ module.exports = new TwitterStrategy({
                  * we use a `username-t` policy
                  */
                 const existCount = await models.User.count({where: {username: profileJson.screen_name}})
+                const name = profileJson.name.split(' ')
                 userTwitter = await models.UserTwitter.create({
                     id: profileJson.id,
                     token: token,
@@ -114,8 +115,8 @@ module.exports = new TwitterStrategy({
                     username: profileJson.screen_name,
                     user: {
                         username: existCount === 0 ? profileJson.screen_name : profileJson.screen_name + "-t",
-                        firstname: profileJson.name.split(' ')[0],
-                        lastname: profileJson.name.split(' ').pop(),
+                        lastname: name.pop(),
+                        firstname: name.join(' '),
                         email: profileJson.email || undefined,
                         referralCode: generateReferralCode(profileJson.email || profileJson.screen_name).toUpperCase(),
                         photo: profileJson.profile_image_url_https.replace('_normal', '_400x400'),

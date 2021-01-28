@@ -18,7 +18,7 @@ const { generateReferralCode}  = require('../../../utils/referral')
 module.exports = new GithubStrategy({
     clientID: secrets.GITHUB_CONSUMER_KEY,
     clientSecret: secrets.GITHUB_CONSUMER_SECRET,
-    callbackURL: config.SERVER_URL + config.GITHUB_CALLBACK,
+    callbackURL: config.SERVER_URL+ config.GITHUB_CALLBACK,
     passReqToCallback: true
 }, async function (req, token, tokenSecret, profile, cb) {
     let profileJson = profile._json
@@ -102,7 +102,7 @@ module.exports = new GithubStrategy({
 
                 /* Check if users with same username exist. Modify username accordingly */
                 const existCount = await models.User.count({where: {username: profileJson.login}})
-
+               
                 userGithub = await models.UserGithub.create({
                     id: profileJson.id,
                     token: token,
@@ -111,7 +111,6 @@ module.exports = new GithubStrategy({
                     user: {
                         username: existCount === 0 ? profileJson.login : profileJson.login + "-gh",
                         firstname: profileJson.name ? profileJson.name.split(' ')[0] : profileJson.login,
-                        lastname: profileJson.name ? profileJson.name.split(' ').pop() : profileJson.login,
                         email: profileJson.email,
                         referralCode: generateReferralCode(profileJson.email).toUpperCase(),
                         photo: profileJson.avatar_url,
