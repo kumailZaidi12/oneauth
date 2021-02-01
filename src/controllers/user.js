@@ -4,6 +4,7 @@ const sequelize = require('sequelize');
 const Bluebird = require('bluebird');
 const Raven = require('raven');
 const passutils = require("../utils/password");
+const {generateReferralCode} = require("../utils/referral");
 
 const { validateUsername } = require('../utils/username_validator')
 const { eventUserCreated, eventUserUpdated } = require('./event/users')
@@ -201,6 +202,7 @@ const createVerifiedUserWithPassword = async (user) => {
 
     try {
         user.verifiedemail = user.email
+        user.referralCode = generateReferralCode(user.username)
         user.userlocal = {
             password: await passutils.pass2hash(user.password)
         }
@@ -209,8 +211,8 @@ const createVerifiedUserWithPassword = async (user) => {
                 association: User.UserLocal,
             }]
         })
-        eventUserCreated(record.id).catch(Raven.captureException.bind(Raven))
         record = record.get({plain:true})
+        eventUserCreated(record.id).catch(Raven.captureException.bind(Raven))
         record.created = true
         record.error = null
         delete record.userlocal
